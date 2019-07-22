@@ -3,6 +3,7 @@ package com.github.senin24.examples.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 @Getter
@@ -20,17 +21,33 @@ public enum ExampleFindByCodeType {
     if (Objects.isNull(code)) {
       throw new IllegalArgumentException("Value not be null");
     }
-    int intValue;
+    int flagIdIntValue;
     try {
-      intValue = Integer.valueOf(code);
+      flagIdIntValue = Integer.valueOf(code);
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Value must be integer number, but now is " + code);
     }
     for (ExampleFindByCodeType type : ExampleFindByCodeType.values()) {
-      if (type.flagId == intValue) {
+      if (type.flagId.intValue() == flagIdIntValue) {
         return type;
       }
     }
     throw new IllegalArgumentException("Value must be , '0', '1' or '2', but now is " + code);
+  }
+
+  public static ExampleFindByCodeType findByCodeByStream(String code) {
+    if (Objects.isNull(code)) {
+      throw new IllegalArgumentException("Value not be null");
+    }
+    int flagIdIntValue;
+    try {
+      flagIdIntValue = Integer.valueOf(code);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Value must be integer number, but now is " + code);
+    }
+    return Arrays.stream(ExampleFindByCodeType.values())
+        .filter(e -> e.flagId.intValue() == flagIdIntValue)
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Value must be , '0', '1' or '2', but now is " + code));
   }
 }
